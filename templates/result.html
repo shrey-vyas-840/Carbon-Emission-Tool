@@ -3,63 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electricity Carbon Footprint Calculator</title>
+    <title>Carbon Footprint Results - Electricity Calculator</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🌱 Electricity Carbon Footprint Calculator</h1>
-            <p>Calculate your annual CO₂ emissions from electricity usage</p>
+            <h1>🌱 Your Carbon Footprint Results</h1>
+            <p>Annual CO₂ emissions from your electricity usage</p>
         </header>
 
         <main>
-            <form action="/calculate" method="POST" class="calculator-form">
-                <!-- User Type Selection -->
-                <div class="form-group">
-                    <label for="user_type">Who are you?</label>
-                    <select name="user_type" id="user_type" required>
-                        <option value="">Select your category</option>
-                        <option value="Individual">Individual</option>
-                        <option value="Family">Family</option>
-                        <option value="Corporate">Corporate</option>
-                    </select>
+            <!-- Results Card -->
+            <div class="results-card">
+                <h2>📊 Calculation Results</h2>
+                
+                <!-- Input Details -->
+                <div class="result-details">
+                    <div class="detail-row">
+                        <span class="label">User Type:</span>
+                        <span class="value">{{ user_type }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Monthly Usage:</span>
+                        <span class="value">{{ monthly_usage }} kWh</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Annual Usage:</span>
+                        <span class="value">{{ annual_usage }} kWh</span>
+                    </div>
                 </div>
 
-                <!-- Monthly Electricity Usage Input -->
-                <div class="form-group">
-                    <label for="monthly_usage">Monthly Electricity Consumption (kWh)</label>
-                    <input 
-                        type="number" 
-                        name="monthly_usage" 
-                        id="monthly_usage" 
-                        placeholder="Enter your monthly kWh usage"
-                        min="0"
-                        step="0.01"
-                        required
-                    >
-                    <small>Check your electricity bill for monthly kWh consumption</small>
+                <!-- Main Result -->
+                <div class="main-result">
+                    <h3>Annual CO₂ Emissions</h3>
+                    <div class="emission-value">{{ annual_emissions }} kg</div>
+                    <p class="calculation-note">Based on India's emission factor of 0.82 kg CO₂/kWh</p>
                 </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="calculate-btn">
-                    Calculate Carbon Footprint
-                </button>
-            </form>
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <form action="/download_pdf" method="POST" style="display: inline;">
+                        <input type="hidden" name="user_type" value="{{ user_type }}">
+                        <input type="hidden" name="monthly_usage" value="{{ monthly_usage }}">
+                        <input type="hidden" name="annual_usage" value="{{ annual_usage }}">
+                        <input type="hidden" name="annual_emissions" value="{{ annual_emissions }}">
+                        <button type="submit" class="download-btn">📄 Download PDF Report</button>
+                    </form>
+                    <a href="/" class="back-btn">🔄 Calculate Again</a>
+                </div>
+            </div>
 
-            <!-- Information Section -->
+            <!-- Environmental Impact -->
+            <div class="impact-section">
+                <h3>🌍 Environmental Impact Context</h3>
+                <div class="impact-grid">
+                    <div class="impact-item">
+                        <strong>Trees Needed to Offset</strong>
+                        <span>{{ trees_needed }} trees per year</span>
+                    </div>
+                    <div class="impact-item">
+                        <strong>Equivalent Car Miles</strong>
+                        <span>{{ "{:,}".format(car_miles) }} miles driven</span>
+                    </div>
+                </div>
+                
+                <div class="suggestion">
+                    💡 Tip: The average tree absorbs 22 kg of CO₂ per year. Consider planting {{ trees_needed }} trees or reducing your electricity usage to offset your carbon footprint!
+                </div>
+            </div>
+
+            <!-- Recommendations -->
             <div class="info-section">
-                <h3>How it works:</h3>
+                <h3>💚 Recommendations to Reduce Your Carbon Footprint</h3>
                 <ul>
-                    <li>Enter your monthly electricity usage in kWh</li>
-                    <li>We calculate annual CO₂ emissions using India's emission factor (0.82 kg CO₂/kWh)</li>
-                    <li>Get a downloadable PDF report with your results</li>
+                    <li>Switch to LED light bulbs to reduce electricity consumption</li>
+                    <li>Use energy-efficient appliances (5-star rated)</li>
+                    <li>Install solar panels if feasible</li>
+                    <li>Unplug devices when not in use</li>
+                    <li>Use natural light during daytime</li>
+                    <li>Set AC temperature to 24°C or higher</li>
+                    <li>Regular maintenance of electrical appliances</li>
                 </ul>
             </div>
         </main>
 
         <footer>
-            <p>&copy; 2025 Carbon Footprint Calculator | Helping reduce emissions one calculation at a time</p>
+            <p>&copy; 2025 Carbon Footprint Calculator | Making a difference, one calculation at a time</p>
         </footer>
     </div>
 </body>
